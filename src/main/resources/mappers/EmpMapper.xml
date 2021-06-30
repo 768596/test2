@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace指向对应的接口类，全称-->
+<mapper namespace="com.study.model.mapper.EmpMapper">
+    <resultMap id="resultEmp" type="Emp">
+        <id property="empno" column="empno"/>
+        <result column="ename" property="ename"/>
+        <result column="mgr" property="mgr"/>
+        <result column="hiredate" property="hiredate"/>
+        <result column="job" property="job"/>
+        <result column="sal" property="sal"/>
+        <result column="comm" property="comm"/>
+        <!--配置关系字段-->
+        <association property="mydept" javaType="Dept">
+            <id column="deptno" property="deptno"/>
+            <result column="dname" property="dname"/>
+            <result column="loc" property="loc"/>
+        </association>
+    </resultMap>
+
+    <select id="selectAll" resultType="Emp">
+        select * from emp order by sal desc
+    </select>
+    
+    <select id="selectById" resultMap="resultEmp">
+        select * from emp where empno = #{id}
+    </select>
+    
+    <!--新增-->
+    <insert id="doInsert" parameterType="Emp"
+            keyColumn="empno" keyProperty="empno"  useGeneratedKeys="true">
+        insert into emp(ename,job,mgr,sal,comm,hiredate,deptno)
+          values (#{ename},
+                  #{job},
+                  #{mgr},
+                  #{sal},
+                  #{comm},
+                  #{hiredate},
+                  #{mydept.deptno})
+    </insert>
+</mapper>
